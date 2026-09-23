@@ -52,7 +52,8 @@ function Tickets({ currentUser, onLogout }) {
     // filter and sort states
     const [filterStatus, setFilterStatus] = useState('all')
     const [sortBy, setSortBy] = useState('dateold')
-
+    // toggle for showing resolved tickets
+    const [showResolved, setShowResolved] = useState(false)
 
     useEffect(() => {
         Promise.all([
@@ -264,8 +265,16 @@ function Tickets({ currentUser, onLogout }) {
 
     const displayedTickets = tickets
         .filter((ticket) => {
+            if (!showResolved && ticket.status === 'resolved') {
+                return false
+            }
+
             if (filterStatus === 'all') return true
+
             return ticket.status === filterStatus
+        })
+        .sort((a, b) => {
+            // your existing sort code...
         })
         .sort((a, b) => {
             if (sortBy === 'datenew') {
@@ -459,6 +468,16 @@ function Tickets({ currentUser, onLogout }) {
                         >
                             Resolved
                         </button>
+                        {/* show resolved tickets toggle checkbox */}
+                        <label className="rounded px-3 py-1 bg-gray-100 hover:bg-gray-200 ml-auto flex items-center gap-2 text-sm text-gray-700">
+                            Show resolved tickets:
+                            <input
+                                type="checkbox"
+                                checked={showResolved}
+                                onChange={(e) => setShowResolved(e.target.checked)}
+                                className="h-3 w-3 mt-0.5 rounded border-gray-300"
+                            />
+                        </label>
 
                         <div className="ml-auto flex items-center gap-2">
                             <span className="text-sm text-gray-500">Sort:</span>
