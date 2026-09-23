@@ -63,3 +63,7 @@ build/
 *.db
 *.sqlite
 *.sqlite3
+
+# start script
+
+start.sh

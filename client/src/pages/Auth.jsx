@@ -45,22 +45,38 @@ function Auth({ setCurrentUser }) {
     const handleLogin = async (event) => {
         event.preventDefault()
 
-        const response = await apiFetch('/api/login', {
-            method: 'POST',
-            body: JSON.stringify({ email: loginEmail, password: loginPassword }),
-        })
+        setMessage('')
+        setMessageIsError(false)
 
-        const data = await response.json()
+        try {
+            const response = await apiFetch('/api/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email: loginEmail,
+                    password: loginPassword,
+                }),
+            })
 
-        if (response.ok) {
-            // save the token and user info so we stay logged in across refreshes
-            localStorage.setItem('token', data.token)
-            localStorage.setItem('currentUser', JSON.stringify(data.user))
-            setCurrentUser(data.user)
-            navigate('/dashboard')
-        } else {
+            const data = await response.json()
+
+            if (response.ok) {
+                localStorage.setItem('token', data.token)
+                localStorage.setItem('currentUser', JSON.stringify(data.user))
+
+                setCurrentUser(data.user)
+                navigate('/dashboard')
+            } else {
+                setMessage(
+                    data.error ||
+                    `Login failed. Server returned ${response.status}.`
+                )
+                setMessageIsError(true)
+            }
+        } catch (error) {
+            console.error('Login request failed:', error)
+
             setMessage(
-                data.error || 'Login failed. Please check your details and try again.'
+                'Unable to connect to the server. Please try again or contact an administrator.'
             )
             setMessageIsError(true)
         }

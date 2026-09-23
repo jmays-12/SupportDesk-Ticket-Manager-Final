@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 import { apiFetch } from '../api.js'
@@ -400,7 +401,7 @@ function Tickets({ currentUser, onLogout }) {
                                 <div key={ticket.id} className="rounded border p-4">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
-                                            <h2 className="font-semibold text-gray-900 capitalize">
+                                            <h2 className="font-semibold text-gray-900">
                                                 {ticket.subject}
                                             </h2>
 
@@ -518,6 +519,13 @@ function Tickets({ currentUser, onLogout }) {
                                                 </>
                                             ) : (
                                                 <>
+                                                    <Link
+                                                        to={`/tickets/${ticket.id}`}
+                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                    >
+                                                        View
+                                                    </Link>
+
                                                     <button
                                                         type="button"
                                                         onClick={() => handleEditTicket(ticket)}

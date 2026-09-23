@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
 
 const statusStyles = {

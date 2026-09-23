@@ -79,7 +79,7 @@ function Dashboard({ currentUser, onLogout }) {
                             Resolved Tickets
                         </p>
 
-                        <p className="mt-2 text-3xl text-center font-bold text-gray-500">
+                        <p className="mt-2 text-3xl text-center font-bold text-green-400">
                             {loading ? '-' : resolvedTickets}
                         </p>
                     </div>
