@@ -10,6 +10,12 @@ const statusStyles = {
     resolved: 'bg-green-50 text-green-700 border-green-200',
 }
 
+const statusLabels = {
+    open: 'Open',
+    in_progress: 'In Progress',
+    resolved: 'Resolved',
+}
+
 const priorityStyles = {
     low: 'bg-gray-50 text-gray-600 border-gray-200',
     medium: 'bg-orange-50 text-orange-700 border-orange-200',
@@ -306,8 +312,8 @@ function TicketDetail({ currentUser, onLogout }) {
                                 <div>
                                     <label className="text-sm font-medium text-gray-700">Status</label>
                                     <div className="mt-1">
-                                        <span className={`inline-block rounded-full border px-3 py-1 text-xs font-medium capitalize ${statusStyles[ticket.status]}`}>
-                                            {ticket.status.replace('_', ' ')}
+                                        <span className={`inline-block rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[ticket.status]}`}>
+                                            {statusLabels[ticket.status]}
                                         </span>
                                     </div>
                                 </div>

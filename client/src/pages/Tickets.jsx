@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 import { apiFetch } from '../api.js'
-import { formatDate, formatRelativeTime } from '../utils/dateUtils.js'
+import { formatRelativeTime } from '../utils/dateUtils.js'
 
 const statusStyles = {
     open: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -49,6 +49,9 @@ function Tickets({ currentUser, onLogout }) {
     const [editingNoteId, setEditingNoteId] = useState(null)
     const [editNoteContent, setEditNoteContent] = useState('')
     const [editNoteError, setEditNoteError] = useState('')
+    // filter and sort states
+    const [filterStatus, setFilterStatus] = useState('all')
+    const [sortBy, setSortBy] = useState('dateold')
 
 
     useEffect(() => {
@@ -259,6 +262,38 @@ function Tickets({ currentUser, onLogout }) {
         }
     }
 
+    const displayedTickets = tickets
+        .filter((ticket) => {
+            if (filterStatus === 'all') return true
+            return ticket.status === filterStatus
+        })
+        .sort((a, b) => {
+            if (sortBy === 'datenew') {
+                return new Date(b.created_at) - new Date(a.created_at)
+            }
+
+            if (sortBy === 'dateold') {
+                return new Date(a.created_at) - new Date(b.created_at)
+            }
+
+            if (sortBy === 'priority') {
+                const priorityOrder = {
+                    critical: 4,
+                    high: 3,
+                    medium: 2,
+                    low: 1,
+                }
+
+                return priorityOrder[b.priority] - priorityOrder[a.priority]
+            }
+
+            if (sortBy === 'status') {
+                return a.status.localeCompare(b.status)
+            }
+
+            return 0
+        })
+
     return (
         <div className="min-h-screen bg-gray-100">
             <Navbar currentUser={currentUser} onLogout={onLogout} />
@@ -267,7 +302,7 @@ function Tickets({ currentUser, onLogout }) {
                 <div className="flex items-center justify-between">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">Tickets</h1>
-                        <p className="mt-2 text-gray-600">View and manage support tickets.</p>
+                        <p className="mt-2 text-gray-600">View and manage support tickets</p>
                     </div>
 
                     <button
@@ -392,30 +427,100 @@ function Tickets({ currentUser, onLogout }) {
                 )}
 
                 <div className="mt-8 rounded-lg bg-white p-6 shadow">
+                    <div className="mb-6 flex flex-wrap items-center gap-2 border-b pb-4">
+                        <button
+                            type="button"
+                            onClick={() => setFilterStatus('all')}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        >
+                            All
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setFilterStatus('open')}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'open' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        >
+                            Open
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setFilterStatus('in_progress')}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'in_progress' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        >
+                            In Progress
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setFilterStatus('resolved')}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'resolved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                        >
+                            Resolved
+                        </button>
+
+                        <div className="ml-auto flex items-center gap-2">
+                            <span className="text-sm text-gray-500">Sort:</span>
+
+                            <button
+                                type="button"
+                                onClick={() => setSortBy('dateold')}
+                                className={`rounded px-3 py-1 text-sm ${sortBy === 'dateold' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            >
+                                Date (Oldest first)
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setSortBy('datenew')}
+                                className={`rounded px-3 py-1 text-sm ${sortBy === 'datenew' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            >
+                                Date (Newest first)
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setSortBy('priority')}
+                                className={`rounded px-3 py-1 text-sm ${sortBy === 'priority' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            >
+                                Priority
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => setSortBy('status')}
+                                className={`rounded px-3 py-1 text-sm ${sortBy === 'status' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            >
+                                Status
+                            </button>
+                        </div>
+                    </div>
+
                     {loading ? (
                         <p className="text-gray-500">Loading tickets...</p>
-                    ) : tickets.length === 0 ? (
-                        <p className="text-gray-500">No tickets yet.</p>
+                    ) : displayedTickets.length === 0 ? (
+                        <p className="text-gray-500">No tickets found.</p>
                     ) : (
                         <div className="space-y-4">
-                            {tickets.map((ticket) => (
+                            {displayedTickets.map((ticket) => (
                                 <div key={ticket.id} className="rounded border p-4">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
-                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                            <p className="mt-2 text-sm text-gray-500 capitalize">
                                                 Subject:
                                             </p>
                                             <h2 className="text-gray-900">
                                                 &nbsp;{ticket.subject}
                                             </h2>
-                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                            <p className="mt-1 text-sm text-gray-500 capitalize">
                                                 Description:
                                             </p>
                                             <p className="mt-1 text-sm text-gray-900">
                                                 &nbsp;{ticket.description}
                                             </p>
 
-                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                            <p className="mt-1 text-sm text-gray-500 capitalize">
                                                 Customer:
                                             </p>
                                             <p>
@@ -474,7 +579,7 @@ function Tickets({ currentUser, onLogout }) {
                                             ) : (
                                                 ticket.assigned_user_name && (
                                                     <>
-                                                        <p className="text-sm text-gray-400">
+                                                        <p className="text-sm text-gray-500">
                                                             Assigned to:
                                                         </p>
                                                         <p>

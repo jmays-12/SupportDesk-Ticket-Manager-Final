@@ -3,13 +3,26 @@ import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
-import { formatDate, formatRelativeTime } from '../utils/dateUtils.js'
+import { formatDate } from '../utils/dateUtils.js'
 
 function Dashboard({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Dashboard'
 
     const [tickets, setTickets] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const statusStyles = {
+        open: 'bg-blue-50 text-blue-700 border-blue-200',
+        in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+        resolved: 'bg-green-50 text-green-700 border-green-200',
+    }
+
+    const statusLabels = {
+        open: 'Open',
+        in_progress: 'In Progress',
+        resolved: 'Resolved',
+    }
+
 
     useEffect(() => {
         apiFetch('/api/tickets')
@@ -126,10 +139,10 @@ function Dashboard({ currentUser, onLogout }) {
                                     </div>
                                     <div>
                                         <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-                                            Ticket created: {formatDate(ticket.created_at)}
+                                            Created: {formatDate(ticket.created_at)}
                                         </span>
-                                        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-                                            Status: {ticket.status.replace('_', ' ')}
+                                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${statusStyles[ticket.status]}`}>
+                                            {statusLabels[ticket.status]}
                                         </span>
                                     </div>
                                 </div>
