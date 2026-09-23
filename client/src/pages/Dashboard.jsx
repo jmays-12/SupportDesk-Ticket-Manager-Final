@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
+import { formatDate, formatRelativeTime } from '../utils/dateUtils.js'
 
 function Dashboard({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Dashboard'
@@ -84,26 +85,6 @@ function Dashboard({ currentUser, onLogout }) {
                         </p>
                     </div>
                 </div>
-
-                {/* quick actions */}
-                {/* will be re-implemented later when theres more things to put here */}
-                {/*<div className="mt-8 rounded-lg bg-white p-6 shadow">
-                    <h2 className="text-xl font-semibold text-gray-900">
-                        Quick Actions
-                    </h2>
-
-                    <div className="mt-4 flex flex-wrap gap-3">
-                        <Link
-                            to="/tickets"
-                            className="rounded-md bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
-                        >
-                            View Tickets
-                        </Link>
-
-                    </div>
-                </div>
-                */}
-
                 {/* recent tickets */}
                 <div className="mt-8 rounded-lg bg-white p-6 shadow">
                     <div className="flex items-center justify-between">
@@ -143,10 +124,14 @@ function Dashboard({ currentUser, onLogout }) {
                                             {ticket.customer_name || 'Unknown customer'}
                                         </p>
                                     </div>
-
-                                    <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
-                                        {ticket.status.replace('_', ' ')}
-                                    </span>
+                                    <div>
+                                        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+                                            Ticket created: {formatDate(ticket.created_at)}
+                                        </span>
+                                        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium capitalize text-gray-700">
+                                            Status: {ticket.status.replace('_', ' ')}
+                                        </span>
+                                    </div>
                                 </div>
                             ))}
                         </div>

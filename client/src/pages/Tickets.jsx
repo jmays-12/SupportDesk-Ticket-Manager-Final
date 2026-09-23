@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 import { apiFetch } from '../api.js'
+import { formatDate, formatRelativeTime } from '../utils/dateUtils.js'
 
 const statusStyles = {
     open: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -19,7 +20,7 @@ const priorityStyles = {
 
 function Tickets({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Tickets'
-    // huge wall of states but needed to keep track of everything
+
     const [tickets, setTickets] = useState([])
     const [customers, setCustomers] = useState([])
     const [users, setUsers] = useState([])
@@ -401,16 +402,24 @@ function Tickets({ currentUser, onLogout }) {
                                 <div key={ticket.id} className="rounded border p-4">
                                     <div className="flex items-start justify-between gap-4">
                                         <div className="flex-1">
-                                            <h2 className="font-semibold text-gray-900">
-                                                {ticket.subject}
+                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                                Subject:
+                                            </p>
+                                            <h2 className="text-gray-900">
+                                                &nbsp;{ticket.subject}
                                             </h2>
-
-                                            <p className="mt-1 text-sm text-gray-600">
-                                                {ticket.description}
+                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                                Description:
+                                            </p>
+                                            <p className="mt-1 text-sm text-gray-900">
+                                                &nbsp;{ticket.description}
                                             </p>
 
-                                            <p className="mt-2 text-sm text-gray-500 capitalize">
-                                                Customer: {ticket.customer_name}
+                                            <p className="mt-2 text-sm text-gray-400 capitalize">
+                                                Customer:
+                                            </p>
+                                            <p>
+                                                &nbsp;{ticket.customer_name}
                                             </p>
 
                                             {editingTicketId === ticket.id ? (
@@ -464,9 +473,14 @@ function Tickets({ currentUser, onLogout }) {
                                                 </div>
                                             ) : (
                                                 ticket.assigned_user_name && (
-                                                    <p className="text-sm text-gray-500">
-                                                        Assigned to: {ticket.assigned_user_name}
-                                                    </p>
+                                                    <>
+                                                        <p className="text-sm text-gray-400">
+                                                            Assigned to:
+                                                        </p>
+                                                        <p>
+                                                            &nbsp;{ticket.assigned_user_name}
+                                                        </p>
+                                                    </>
                                                 )
                                             )}
                                         </div>
@@ -494,7 +508,9 @@ function Tickets({ currentUser, onLogout }) {
                                         >
                                             {expandedTicketId === ticket.id ? 'Hide notes' : 'Show notes'}
                                         </button>
-
+                                        <span className="text-xs text-gray-400">
+                                            {formatRelativeTime(ticket.created_at)}
+                                        </span>
                                         <div className="flex gap-2">
                                             {editingTicketId === ticket.id ? (
                                                 <>
