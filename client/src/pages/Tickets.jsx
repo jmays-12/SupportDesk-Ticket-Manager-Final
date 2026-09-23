@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
+
 import { Link } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
+
 import { apiFetch } from '../api.js'
+
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
 const statusStyles = {
@@ -26,6 +29,7 @@ function Tickets({ currentUser, onLogout }) {
     const [users, setUsers] = useState([])
     const [loading, setLoading] = useState(true)
     const [message, setMessage] = useState('')
+
     // new ticket form state
     const [showForm, setShowForm] = useState(false)
     const [subject, setSubject] = useState('')
@@ -35,12 +39,15 @@ function Tickets({ currentUser, onLogout }) {
     const [status, setStatus] = useState('open')
     const [priority, setPriority] = useState('medium')
     const [createError, setCreateError] = useState('')
+
     // edit state
     const [editingTicketId, setEditingTicketId] = useState(null)
+    const [editDescription, setEditDescription] = useState('')
     const [editStatus, setEditStatus] = useState('')
     const [editPriority, setEditPriority] = useState('')
     const [editAssignedUserId, setEditAssignedUserId] = useState('')
     const [editError, setEditError] = useState('')
+
     // notes state
     const [expandedTicketId, setExpandedTicketId] = useState(null)
     const [ticketNotes, setTicketNotes] = useState({})
@@ -49,9 +56,11 @@ function Tickets({ currentUser, onLogout }) {
     const [editingNoteId, setEditingNoteId] = useState(null)
     const [editNoteContent, setEditNoteContent] = useState('')
     const [editNoteError, setEditNoteError] = useState('')
+
     // filter and sort states
     const [filterStatus, setFilterStatus] = useState('all')
     const [sortBy, setSortBy] = useState('dateold')
+
     // toggle for showing resolved tickets
     const [showResolved, setShowResolved] = useState(false)
 
@@ -116,6 +125,7 @@ function Tickets({ currentUser, onLogout }) {
 
     const handleEditTicket = (ticket) => {
         setEditingTicketId(ticket.id)
+        setEditDescription(ticket.description)
         setEditStatus(ticket.status)
         setEditPriority(ticket.priority)
         setEditAssignedUserId(ticket.assigned_user_id ?? '')
@@ -126,6 +136,7 @@ function Tickets({ currentUser, onLogout }) {
         const response = await apiFetch(`/api/tickets/${ticketId}`, {
             method: 'PATCH',
             body: JSON.stringify({
+                description: editDescription,
                 status: editStatus,
                 priority: editPriority,
                 assigned_user_id: editAssignedUserId ? parseInt(editAssignedUserId) : null,
@@ -141,6 +152,24 @@ function Tickets({ currentUser, onLogout }) {
             setMessage('Ticket updated successfully.')
         } else {
             setEditError(data.error || 'Failed to update ticket.')
+        }
+    }
+
+    const handleMarkResolved = async (ticketId) => {
+        const response = await apiFetch(`/api/tickets/${ticketId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                status: 'resolved',
+            }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+            setTickets(tickets.map((t) => (t.id === ticketId ? { ...t, ...data } : t)))
+            setMessage('Ticket marked as resolved.')
+        } else {
+            setMessage(data.error || 'Failed to mark ticket as resolved.')
         }
     }
 
@@ -273,9 +302,7 @@ function Tickets({ currentUser, onLogout }) {
 
             return ticket.status === filterStatus
         })
-        .sort((a, b) => {
-            // your existing sort code...
-        })
+
         .sort((a, b) => {
             if (sortBy === 'datenew') {
                 return new Date(b.created_at) - new Date(a.created_at)
@@ -468,9 +495,11 @@ function Tickets({ currentUser, onLogout }) {
                         >
                             Resolved
                         </button>
+
                         {/* show resolved tickets toggle checkbox */}
                         <label className="rounded px-3 py-1 bg-gray-100 hover:bg-gray-200 ml-auto flex items-center gap-2 text-sm text-gray-700">
                             Show resolved tickets:
+
                             <input
                                 type="checkbox"
                                 checked={showResolved}
@@ -529,19 +558,32 @@ function Tickets({ currentUser, onLogout }) {
                                             <p className="mt-2 text-sm text-gray-500 capitalize">
                                                 Subject:
                                             </p>
+
                                             <h2 className="text-gray-900">
                                                 &nbsp;{ticket.subject}
                                             </h2>
+
                                             <p className="mt-1 text-sm text-gray-500 capitalize">
                                                 Description:
                                             </p>
-                                            <p className="mt-1 text-sm text-gray-900">
-                                                &nbsp;{ticket.description}
-                                            </p>
+
+                                            {editingTicketId === ticket.id ? (
+                                                <textarea
+                                                    value={editDescription}
+                                                    onChange={(e) => setEditDescription(e.target.value)}
+                                                    className="mt-1 w-full rounded border p-2 text-sm"
+                                                    rows={4}
+                                                />
+                                            ) : (
+                                                <p className="mt-1 text-sm text-gray-900">
+                                                    &nbsp;{ticket.description}
+                                                </p>
+                                            )}
 
                                             <p className="mt-1 text-sm text-gray-500 capitalize">
                                                 Customer:
                                             </p>
+
                                             <p>
                                                 &nbsp;{ticket.customer_name}
                                             </p>
@@ -601,6 +643,7 @@ function Tickets({ currentUser, onLogout }) {
                                                         <p className="text-sm text-gray-500">
                                                             Assigned to:
                                                         </p>
+
                                                         <p>
                                                             &nbsp;{ticket.assigned_user_name}
                                                         </p>
@@ -632,9 +675,11 @@ function Tickets({ currentUser, onLogout }) {
                                         >
                                             {expandedTicketId === ticket.id ? 'Hide notes' : 'Show notes'}
                                         </button>
+
                                         <span className="text-xs text-gray-400">
                                             {formatRelativeTime(ticket.created_at)}
                                         </span>
+
                                         <div className="flex gap-2">
                                             {editingTicketId === ticket.id ? (
                                                 <>
@@ -673,6 +718,16 @@ function Tickets({ currentUser, onLogout }) {
                                                     >
                                                         Edit
                                                     </button>
+
+                                                    {ticket.status !== 'resolved' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleMarkResolved(ticket.id)}
+                                                            className="rounded border border-green-300 bg-green-50 px-3 py-1 text-sm text-green-700 hover:bg-green-100"
+                                                        >
+                                                            Mark Resolved
+                                                        </button>
+                                                    )}
 
                                                     <button
                                                         type="button"
