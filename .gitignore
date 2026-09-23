@@ -63,7 +63,3 @@ build/
 *.db
 *.sqlite
 *.sqlite3
-
-# Start flask and npm frontend script
-
-start.sh
