@@ -1,7 +1,7 @@
 import os
 from datetime import timedelta
-
 from dotenv import load_dotenv
+
 from flask import Flask, jsonify, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
@@ -103,6 +103,24 @@ def get_users():
     ]), 200
 
 
+# dashboard stats
+
+@app.route("/api/tickets/stats", methods=["GET"])
+@jwt_required()
+def get_ticket_stats():
+    open_count = Ticket.query.filter(Ticket.status != "resolved").count()
+    resolved_count = Ticket.query.filter(Ticket.status == "resolved").count()
+    critical_count = Ticket.query.filter(
+        Ticket.priority == "critical",
+        Ticket.status != "resolved",   # don't count resolved criticals
+    ).count()
+
+    return jsonify({
+        "open": open_count,
+        "resolved": resolved_count,
+        "critical": critical_count,
+    }), 200
+
 # customer routes
 
 @app.route("/api/customers", methods=["GET"])
@@ -126,7 +144,7 @@ def get_customers():
 def create_customer():
     data = request.get_json()
 
-    if not data.get("name") or not data.get("email"):
+    if not data.get("name").strip() or not data.get("email").strip():
         return jsonify({"error": "Name and email are required"}), 400
 
     if Customer.query.filter_by(email=data["email"]).first():
@@ -324,6 +342,7 @@ def create_ticket():
         db.session.add(ticket)
         db.session.commit()
     except ValueError as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
     return jsonify({
@@ -368,6 +387,7 @@ def update_ticket(id):
             ticket.priority = data["priority"]
         db.session.commit()
     except ValueError as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
     return jsonify({

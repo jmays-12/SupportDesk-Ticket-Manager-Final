@@ -12,6 +12,9 @@ function Dashboard({ currentUser, onLogout }) {
     const [tickets, setTickets] = useState([])
     const [loading, setLoading] = useState(true)
 
+    // stats state so pagination doesn't make the overview show sliced data
+    const [stats, setStats] = useState({ open: 0, resolved: 0, critical: 0 })
+
     const statusLabels = {
         open: 'Open',
         in_progress: 'In Progress',
@@ -20,35 +23,21 @@ function Dashboard({ currentUser, onLogout }) {
 
 
     useEffect(() => {
-        apiFetch('/api/tickets?page=1&limit=5&sort_by=datenew&show_resolved=true')
-            .then(async (response) => {
-                const data = await response.json()
-
-                if (!response.ok) {
-                    throw new Error(data.msg || data.error || 'Failed to load tickets')
-                }
-
-                setTickets(data.tickets || [])
+        Promise.all([
+            apiFetch('/api/tickets?page=1&limit=5&sort_by=datenew&show_resolved=true').then(r => r.json()),
+            apiFetch('/api/tickets/stats').then(r => r.json()),
+        ])
+            .then(([ticketData, statsData]) => {
+                setTickets(ticketData.tickets || [])
+                setStats(statsData)
             })
             .catch((error) => {
-                console.error('Failed to load dashboard tickets:', error)
+                console.error('Failed to load dashboard:', error)
             })
             .finally(() => {
                 setLoading(false)
             })
     }, [])
-
-    const openTickets = tickets.filter(
-        (ticket) => ticket.status !== 'resolved'
-    ).length
-
-    const resolvedTickets = tickets.filter(
-        (ticket) => ticket.status === 'resolved'
-    ).length
-
-    const criticalPriorityTickets = tickets.filter(
-        (ticket) => ticket.priority === 'critical'
-    ).length
 
     return (
         <div className="min-h-screen bg-[#F6F4EE]">
@@ -69,7 +58,7 @@ function Dashboard({ currentUser, onLogout }) {
                         </p>
 
                         <p className="mt-2 text-3xl text-center font-serif text-[#211C16]">
-                            {loading ? '-' : openTickets}
+                            {loading ? '-' : stats.open}
                         </p>
                     </div>
 
@@ -79,7 +68,7 @@ function Dashboard({ currentUser, onLogout }) {
                         </p>
 
                         <p className="mt-2 text-3xl text-center font-serif text-red-600">
-                            {loading ? '-' : criticalPriorityTickets}
+                            {loading ? '-' : stats.critical}
                         </p>
                     </div>
 
@@ -89,7 +78,7 @@ function Dashboard({ currentUser, onLogout }) {
                         </p>
 
                         <p className="mt-2 text-3xl text-center font-serif text-emerald-600">
-                            {loading ? '-' : resolvedTickets}
+                            {loading ? '-' : stats.resolved}
                         </p>
                     </div>
                 </div>
