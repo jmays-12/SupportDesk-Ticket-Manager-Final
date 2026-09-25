@@ -57,7 +57,8 @@ function App() {
                     }
                 } catch (error) {
                     console.error('Auth check failed:', error)
-                    setCurrentUser(null)
+                    // keep stored user logged in in case networking drops
+                    setCurrentUser(JSON.parse(storedUser))
                 }
             }
 
