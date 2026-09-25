@@ -20,7 +20,7 @@ function Dashboard({ currentUser, onLogout }) {
 
 
     useEffect(() => {
-        apiFetch('/api/tickets')
+        apiFetch('/api/tickets?page=1&limit=5&sort_by=datenew&show_resolved=true')
             .then(async (response) => {
                 const data = await response.json()
 
@@ -28,7 +28,7 @@ function Dashboard({ currentUser, onLogout }) {
                     throw new Error(data.msg || data.error || 'Failed to load tickets')
                 }
 
-                setTickets(Array.isArray(data) ? data : [])
+                setTickets(data.tickets || [])
             })
             .catch((error) => {
                 console.error('Failed to load dashboard tickets:', error)
@@ -118,7 +118,7 @@ function Dashboard({ currentUser, onLogout }) {
                         </p>
                     ) : (
                         <div className="mt-4 divide-y divide-gray-200">
-                            {tickets.slice(-5).reverse().map((ticket) => (
+                            {tickets.map((ticket) => (
                                 <div
                                     key={ticket.id}
                                     className="flex items-center justify-between py-4"

@@ -6,16 +6,16 @@ import { apiFetch } from '../api.js'
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
 export const statusStyles = {
-    open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
-    in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    open: 'bg-[#FBF3E4] text-[#8A4A12] border-[#E7C9A0]',
+    in_progress: 'bg-[#F3EDDD] text-[#7A6330] border-[#D9C79A]',
     resolved: 'bg-[#E8EEE5] text-[#3E573A] border-[#9BAF96]',
 }
 
-const priorityStyles = {
-    low: 'bg-amber-50 text-amber-600 border-amber-200',
-    medium: 'bg-orange-50 text-orange-800 border-orange-200',
-    high: 'bg-red-50 text-red-700 border-red-200',
-    critical: 'bg-red-100 text-red-900 border-red-600',
+export const priorityStyles = {
+    low: 'bg-[#F3EFE6] text-[#6B6259] border-[#DAD2C2]',
+    medium: 'bg-[#F6EEDC] text-[#8A6A32] border-[#E0CB9C]',
+    high: 'bg-[#F5E1D6] text-[#9B4A24] border-[#DBA98A]',
+    critical: 'bg-[#EED9D2] text-[#7A2E1A] border-red-600',
 }
 
 function Tickets({ currentUser, onLogout }) {
