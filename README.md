@@ -8,7 +8,7 @@ A full-stack customer support ticketing app built with React and Flask. Business
 
 **Backend:** Flask, SQLAlchemy, Flask-Bcrypt, Flask-JWT-Extended, Flask-Migrate, Flask-CORS
 
-**Database:** PostgreSQL (SQLite works for local development)
+**Database:** PostgreSQL
 
 ## Features
 
