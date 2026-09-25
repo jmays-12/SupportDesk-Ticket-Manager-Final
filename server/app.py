@@ -143,8 +143,10 @@ def get_customers():
 @jwt_required()
 def create_customer():
     data = request.get_json()
+    name = (data.get("name") or "").strip()
+    email = (data.get("email") or "").strip()
 
-    if not data.get("name").strip() or not data.get("email").strip():
+    if not name or not email:
         return jsonify({"error": "Name and email are required"}), 400
 
     if Customer.query.filter_by(email=data["email"]).first():
