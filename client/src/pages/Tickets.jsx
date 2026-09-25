@@ -711,7 +711,7 @@ function Tickets({ currentUser, onLogout }) {
                                         <button
                                             type="button"
                                             onClick={() => toggleNotes(ticket.id)}
-                                            className="text-sm text-gray-500 hover:text-gray-700"
+                                            className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-600 hover:text-gray-700 hover:bg-[#F6F4EE]"
                                         >
                                             {expandedTicketId === ticket.id ? 'Hide notes' : 'Show notes'}
                                         </button>
