@@ -275,6 +275,33 @@ function Tickets({ currentUser, onLogout }) {
         }
     }
 
+    const handleClaimTicket = async (ticketId) => {
+        const response = await apiFetch(`/api/tickets/${ticketId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                assigned_user_id: currentUser.id,
+            }),
+        })
+
+        const data = await response.json()
+
+        if (response.ok) {
+            setTickets(tickets.map((t) =>
+                t.id === ticketId
+                    ? {
+                        ...t,
+                        ...data,
+                        assigned_user_id: currentUser.id,
+                        assigned_user_name: currentUser.name,
+                    }
+                    : t
+            ))
+            setMessage('Ticket claimed successfully.')
+        } else {
+            setMessage(data.error || 'Failed to claim ticket.')
+        }
+    }
+
     const handleDeleteNote = async (ticketId, noteId) => {
         const confirmed = window.confirm('Are you sure you want to delete this note?')
 
@@ -641,17 +668,27 @@ function Tickets({ currentUser, onLogout }) {
                                                     )}
                                                 </div>
                                             ) : (
-                                                ticket.assigned_user_name && (
-                                                    <>
-                                                        <p className="text-sm text-gray-500">
-                                                            Assigned to:
+                                                <>
+                                                    <p className="text-sm text-gray-500">
+                                                        Assigned to:
+                                                    </p>
+
+                                                    <div className="flex items-center gap-2">
+                                                        <p>
+                                                            &nbsp;{ticket.assigned_user_name || 'Unassigned'}
                                                         </p>
 
-                                                        <p>
-                                                            &nbsp;{ticket.assigned_user_name}
-                                                        </p>
-                                                    </>
-                                                )
+                                                        {!ticket.assigned_user_id && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => handleClaimTicket(ticket.id)}
+                                                                className="rounded border border-[#B5651D] bg-white px-2 py-1 text-xs text-[#B5651D] hover:bg-[#F6F4EE]"
+                                                            >
+                                                                Claim Ticket
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </>
                                             )}
                                         </div>
 
