@@ -46,16 +46,17 @@ function App() {
                     if (response.ok) {
                         // Token is valid, restore user
                         setCurrentUser(JSON.parse(storedUser))
-                    } else {
+                    } else if (response.status === 401) {
                         // Token expired or invalid, clear storage
                         localStorage.removeItem('token')
                         localStorage.removeItem('currentUser')
                         setCurrentUser(null)
+                    } else {
+                        // Server error (500, 502, etc) keeps user logged in
+                        setCurrentUser(JSON.parse(storedUser))
                     }
                 } catch (error) {
                     console.error('Auth check failed:', error)
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('currentUser')
                     setCurrentUser(null)
                 }
             }

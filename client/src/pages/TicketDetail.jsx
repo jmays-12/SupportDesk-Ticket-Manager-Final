@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
 import { priorityStyles, statusStyles } from './Tickets.jsx'
 
+import { formatDate } from '../utils/dateUtils.js'
+
 const statusLabels = {
     open: 'Open',
     in_progress: 'In Progress',
@@ -215,7 +217,7 @@ function TicketDetail({ currentUser, onLogout }) {
                                 {ticket.subject}
                             </h1>
                             <p className="mt-1 text-sm text-gray-500">
-                                Ticket #{ticket.id} · Created {new Date(ticket.created_at).toLocaleString()}
+                                Ticket #{ticket.id} · Created {formatDate(ticket.created_at)}
                             </p>
                         </div>
 

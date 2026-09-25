@@ -68,16 +68,22 @@ function Tickets({ currentUser, onLogout }) {
     const [totalPages, setTotalPages] = useState(1)
 
     // builds the query string for the current filter/sort/page state and fetches that page from the backend
-    const fetchTickets = () => {
+    const fetchTickets = (overrides = {}) => {
+        const effectivePage = overrides.page ?? page
+        const effectivePageSize = overrides.pageSize ?? pageSize
+        const effectiveSortBy = overrides.sortBy ?? sortBy
+        const effectiveShowResolved = overrides.showResolved ?? showResolved
+        const effectiveFilterStatus = overrides.filterStatus ?? filterStatus
+
         const params = new URLSearchParams({
-            page: String(page),
-            limit: String(pageSize),
-            sort_by: sortBy,
-            show_resolved: String(showResolved),
+            page: String(effectivePage),
+            limit: String(effectivePageSize),
+            sort_by: effectiveSortBy,
+            show_resolved: String(effectiveShowResolved),
         })
 
-        if (filterStatus !== 'all') {
-            params.set('status', filterStatus)
+        if (effectiveFilterStatus !== 'all') {
+            params.set('status', effectiveFilterStatus)
         }
 
         return apiFetch(`/api/tickets?${params.toString()}`)
@@ -144,7 +150,8 @@ function Tickets({ currentUser, onLogout }) {
         if (response.ok) {
             // jump back to page 1 so the new ticket is visible under default sort/filter
             setPage(1)
-            fetchTickets()
+            // add override so theres no stale state issue
+            fetchTickets({ page: 1 })
 
             setSubject('')
             setDescription('')
