@@ -100,7 +100,6 @@ function Tickets({ currentUser, onLogout }) {
         setLoading(true)
 
         Promise.all([
-            fetchTickets(),
             apiFetch('/api/customers').then((r) => r.json()).then(setCustomers),
             apiFetch('/api/users').then((r) => r.json()).then(setUsers),
         ])
@@ -338,16 +337,13 @@ function Tickets({ currentUser, onLogout }) {
         const data = await response.json()
 
         if (response.ok) {
-            setTickets(tickets.map((t) =>
-                t.id === ticketId
-                    ? {
-                        ...t,
-                        ...data,
-                        assigned_user_id: currentUser.id,
-                        assigned_user_name: currentUser.name,
-                    }
-                    : t
-            ))
+            setTickets((prev) =>
+                prev.map((t) =>
+                    t.id === ticketId
+                        ? { ...t, ...data, assigned_user_id: currentUser.id, assigned_user_name: currentUser.name }
+                        : t
+                )
+            )
             setMessage('Ticket claimed successfully.')
         } else {
             setMessage(data.error || 'Failed to claim ticket.')
@@ -938,7 +934,7 @@ function Tickets({ currentUser, onLogout }) {
                                         <option value={50}>50</option>
                                     </select>
 
-                                    <span>per page &middot; {totalTickets} ticket{totalTickets === 1 ? '' : 's'} total</span>
+                                    <span>per page &middot; {totalTickets} unresolved ticket{totalTickets === 1 ? '' : 's'} total</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">

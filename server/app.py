@@ -174,18 +174,23 @@ def create_customer():
 def update_customer(id):
     customer = db.session.get(Customer, id)
 
+   
+
+
     if not customer:
         return jsonify({"error": "Customer not found"}), 404
 
     data = request.get_json()
 
     if "name" in data:
-        if not data["name"]:
+        name = (data.get("name") or "").strip()
+        if not name:
             return jsonify({"error": "Name cannot be empty"}), 400
         customer.name = data["name"]
 
     if "email" in data:
-        if not data["email"]:
+        email = (data.get("email") or "").strip()
+        if not email:
             return jsonify({"error": "Email cannot be empty"}), 400
 
         existing_customer = Customer.query.filter_by(email=data["email"]).first()
@@ -196,7 +201,8 @@ def update_customer(id):
         customer.email = data["email"]
 
     if "phone_number" in data:
-        customer.phone_number = data["phone_number"]
+        phone = (data.get("phone_number") or "").strip() or None
+        customer.phone_number = phone or None # empty string = None
 
     db.session.commit()
 

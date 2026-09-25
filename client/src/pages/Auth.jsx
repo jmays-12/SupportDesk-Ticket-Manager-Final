@@ -1,10 +1,13 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, redirect } from 'react-router-dom'
 
 import { apiFetch } from '../api.js'
 
 function Auth({ setCurrentUser }) {
     const navigate = useNavigate()
+
+    const location = useLocation()
+    const redirectMessage = location.state?.message
 
     const [showLoginForm, setShowLoginForm] = useState(true)
 
@@ -90,7 +93,6 @@ function Auth({ setCurrentUser }) {
                 <p className="mt-2 text-center text-gray-500">
                     Manage customer tickets from one central app.
                 </p>
-
                 {message && (
                     <div
                         className={
