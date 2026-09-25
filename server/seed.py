@@ -80,7 +80,7 @@ def seed_database():
         tickets = [
             Ticket(
                 subject="URGENT: Critical priority ticket",
-                description="critical ticket description",
+                description="Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
                 status="open",
                 priority="critical",
                 customer_id=customer1.id,
@@ -93,7 +93,7 @@ def seed_database():
                 status="open",
                 priority="high",
                 customer_id=customer2.id,
-                assigned_user_id=test_user.id
+                assigned_user_id=None
             ),
 
             Ticket(
@@ -136,7 +136,7 @@ def seed_database():
                 subject="Unable to upload attachment",
                 description="The customer receives an error when attempting to upload a PDF attachment",
                 status="open",
-                priority="medium",
+                priority="critical",
                 customer_id=customer2.id,
                 assigned_user_id=None
             ),
