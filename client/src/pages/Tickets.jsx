@@ -9,7 +9,7 @@ import { apiFetch } from '../api.js'
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
 const statusStyles = {
-    open: 'bg-blue-50 text-blue-700 border-blue-200',
+    open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
     in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     resolved: 'bg-green-50 text-green-700 border-green-200',
 }
@@ -156,6 +156,9 @@ function Tickets({ currentUser, onLogout }) {
     }
 
     const handleMarkResolved = async (ticketId) => {
+        const confirmed = window.confirm('Are you sure you want to mark this ticket as resolved?')
+        if (!confirmed) return
+
         const response = await apiFetch(`/api/tickets/${ticketId}`, {
             method: 'PATCH',
             body: JSON.stringify({
@@ -331,13 +334,13 @@ function Tickets({ currentUser, onLogout }) {
         })
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-[#F6F4EE]">
             <Navbar currentUser={currentUser} onLogout={onLogout} />
 
             <div className="mx-auto max-w-6xl p-8">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Tickets</h1>
+                        <h1 className="text-3xl font-serif text-[#211C16]">Tickets</h1>
                         <p className="mt-2 text-gray-600">View and manage support tickets</p>
                     </div>
 
@@ -347,7 +350,7 @@ function Tickets({ currentUser, onLogout }) {
                             setShowForm(!showForm)
                             setCreateError('')
                         }}
-                        className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                        className="rounded bg-[#B5651D] px-4 py-2 text-sm text-white hover:bg-[#8A4A12]"
                     >
                         {showForm ? 'Cancel' : 'New Ticket'}
                     </button>
@@ -360,8 +363,8 @@ function Tickets({ currentUser, onLogout }) {
                 )}
 
                 {showForm && (
-                    <div className="mt-6 rounded-lg bg-white p-6 shadow">
-                        <h2 className="mb-4 text-lg font-semibold text-gray-900">New Ticket</h2>
+                    <div className="mt-6 rounded-lg bg-white p-6 shadow-sm">
+                        <h2 className="mb-4 text-lg font-serif text-[#211C16]">New Ticket</h2>
 
                         <form onSubmit={handleCreateTicket} className="space-y-4">
                             <div>
@@ -454,7 +457,7 @@ function Tickets({ currentUser, onLogout }) {
 
                             <button
                                 type="submit"
-                                className="rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                                className="rounded bg-[#B5651D] px-4 py-2 text-sm text-white hover:bg-[#8A4A12]"
                             >
                                 Create Ticket
                             </button>
@@ -462,12 +465,12 @@ function Tickets({ currentUser, onLogout }) {
                     </div>
                 )}
 
-                <div className="mt-8 rounded-lg bg-white p-6 shadow">
+                <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
                     <div className="mb-6 flex flex-wrap items-center gap-2 border-b pb-4">
                         <button
                             type="button"
                             onClick={() => setFilterStatus('all')}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'all' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                         >
                             All
                         </button>
@@ -475,7 +478,7 @@ function Tickets({ currentUser, onLogout }) {
                         <button
                             type="button"
                             onClick={() => setFilterStatus('open')}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'open' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'open' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                         >
                             Open
                         </button>
@@ -483,7 +486,7 @@ function Tickets({ currentUser, onLogout }) {
                         <button
                             type="button"
                             onClick={() => setFilterStatus('in_progress')}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'in_progress' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'in_progress' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                         >
                             In Progress
                         </button>
@@ -491,7 +494,7 @@ function Tickets({ currentUser, onLogout }) {
                         <button
                             type="button"
                             onClick={() => setFilterStatus('resolved')}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'resolved' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'resolved' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                         >
                             Resolved
                         </button>
@@ -686,7 +689,7 @@ function Tickets({ currentUser, onLogout }) {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleSaveTicket(ticket.id)}
-                                                        className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                                        className="rounded bg-[#B5651D] px-3 py-1 text-sm text-white hover:bg-[#8A4A12]"
                                                     >
                                                         Save
                                                     </button>
@@ -697,7 +700,7 @@ function Tickets({ currentUser, onLogout }) {
                                                             setEditingTicketId(null)
                                                             setEditError('')
                                                         }}
-                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                                     >
                                                         Cancel
                                                     </button>
@@ -706,7 +709,7 @@ function Tickets({ currentUser, onLogout }) {
                                                 <>
                                                     <Link
                                                         to={`/tickets/${ticket.id}`}
-                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                                     >
                                                         View
                                                     </Link>
@@ -714,7 +717,7 @@ function Tickets({ currentUser, onLogout }) {
                                                     <button
                                                         type="button"
                                                         onClick={() => handleEditTicket(ticket)}
-                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                        className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                                     >
                                                         Edit
                                                     </button>
@@ -768,7 +771,7 @@ function Tickets({ currentUser, onLogout }) {
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => handleSaveNote(ticket.id, note.id)}
-                                                                            className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                                                            className="rounded bg-[#B5651D] px-3 py-1 text-sm text-white hover:bg-[#8A4A12]"
                                                                         >
                                                                             Save
                                                                         </button>
@@ -779,7 +782,7 @@ function Tickets({ currentUser, onLogout }) {
                                                                                 setEditingNoteId(null)
                                                                                 setEditNoteError('')
                                                                             }}
-                                                                            className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                                            className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                                                         >
                                                                             Cancel
                                                                         </button>
@@ -837,7 +840,7 @@ function Tickets({ currentUser, onLogout }) {
                                                 <button
                                                     type="button"
                                                     onClick={() => handleCreateNote(ticket.id)}
-                                                    className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                                    className="rounded bg-[#B5651D] px-3 py-1 text-sm text-white hover:bg-[#8A4A12]"
                                                 >
                                                     Add Note
                                                 </button>

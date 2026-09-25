@@ -83,9 +83,9 @@ function Auth({ setCurrentUser }) {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gray-100">
-            <div className="w-full max-w-md rounded-lg bg-white p-8 shadow">
-                <h1 className="text-center text-4xl font-bold">SupportDesk</h1>
+        <div className="flex min-h-screen items-center justify-center bg-[#F6F4EE]">
+            <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-sm border-t-2 border-[#B5651D]">
+                <h1 className="text-center text-4xl font-serif text-[#211C16]">SupportDesk</h1>
 
                 <p className="mt-2 text-center text-gray-500">
                     Manage customer tickets from one central app.
@@ -105,7 +105,7 @@ function Auth({ setCurrentUser }) {
 
                 {showLoginForm ? (
                     <form onSubmit={handleLogin} className="mt-6">
-                        <h2 className="text-xl font-semibold">Log In</h2>
+                        <h2 className="text-xl font-serif text-[#211C16]">Log In</h2>
 
                         <div className="mt-4 space-y-4">
                             <input
@@ -126,7 +126,7 @@ function Auth({ setCurrentUser }) {
 
                             <button
                                 type="submit"
-                                className="w-full rounded bg-blue-600 px-4 py-2 text-white"
+                                className="w-full rounded bg-[#B5651D] px-4 py-2 text-white hover:bg-[#8A4A12]"
                             >
                                 Log In
                             </button>
@@ -139,7 +139,7 @@ function Auth({ setCurrentUser }) {
                                         setShowLoginForm(false)
                                         setMessage('')
                                     }}
-                                    className="ml-1 text-blue-600 hover:underline"
+                                    className="ml-1 text-[#B5651D] hover:underline"
                                 >
                                     Sign up
                                 </button>
@@ -148,7 +148,7 @@ function Auth({ setCurrentUser }) {
                     </form>
                 ) : (
                     <form onSubmit={handleSignup} className="mt-6">
-                        <h2 className="text-xl font-semibold">Sign Up</h2>
+                        <h2 className="text-xl font-serif text-[#211C16]">Sign Up</h2>
 
                         <div className="mt-4 space-y-4">
                             <input
@@ -177,7 +177,7 @@ function Auth({ setCurrentUser }) {
 
                             <button
                                 type="submit"
-                                className="w-full rounded bg-blue-600 px-4 py-2 text-white"
+                                className="w-full rounded bg-[#B5651D] px-4 py-2 text-white hover:bg-[#8A4A12]"
                             >
                                 Sign Up
                             </button>
@@ -190,7 +190,7 @@ function Auth({ setCurrentUser }) {
                                         setShowLoginForm(true)
                                         setMessage('')
                                     }}
-                                    className="ml-1 text-blue-600 hover:underline"
+                                    className="ml-1 text-[#B5651D] hover:underline"
                                 >
                                     Log in
                                 </button>

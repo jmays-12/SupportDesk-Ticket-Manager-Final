@@ -158,10 +158,10 @@ function Customers({ currentUser, onLogout }) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-[#F6F4EE]">
             <Navbar currentUser={currentUser} onLogout={onLogout} />
             <div className="mx-auto max-w-6xl">
-                <h1 className="text-3xl font-bold text-gray-900 pt-4">
+                <h1 className="text-3xl font-serif text-[#211C16] pt-4">
                     Customers
                 </h1>
 
@@ -175,16 +175,16 @@ function Customers({ currentUser, onLogout }) {
                     </div>
                 )}
 
-                <div className="fixed bottom-6 right-6 w-80 rounded-lg bg-white shadow-lg">
-                    <div className="flex items-center justify-between border-b p-4">
-                        <h2 className="text-xl font-semibold text-gray-900">
+                <div className="fixed bottom-6 right-6 w-80 rounded-lg bg-white shadow-lg border border-[#E7E2D6]">
+                    <div className="flex items-center justify-between border-b border-[#E7E2D6] p-4">
+                        <h2 className="text-xl font-serif text-[#211C16]">
                             Add Customer
                         </h2>
 
                         <button
                             type="button"
                             onClick={() => setIsMinimized(!isMinimized)}
-                            className="flex h-8 w-8 items-center pb-1 justify-center rounded border border-gray-300 text-xl text-gray-600"
+                            className="flex h-8 w-8 items-center pb-1 justify-center rounded border border-gray-300 text-xl text-gray-600 hover:border-[#B5651D] hover:text-[#B5651D]"
                         >
                             {isMinimized ? '+' : '-'}
                         </button>
@@ -230,7 +230,7 @@ function Customers({ currentUser, onLogout }) {
 
                             <button
                                 type="submit"
-                                className="rounded bg-blue-600 px-4 py-2 text-white"
+                                className="rounded bg-[#B5651D] px-4 py-2 text-white hover:bg-[#8A4A12]"
                             >
                                 Add Customer
                             </button>
@@ -238,7 +238,7 @@ function Customers({ currentUser, onLogout }) {
                     )}
                 </div>
 
-                <div className="mt-8 rounded-lg bg-white p-6 shadow">
+                <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
                     {customers.length === 0 ? (
                         <p className="text-gray-500">
                             No customers in database.
@@ -291,7 +291,7 @@ function Customers({ currentUser, onLogout }) {
                                                     onClick={() =>
                                                         handleSaveCustomer(customer.id)
                                                     }
-                                                    className="rounded bg-blue-600 px-4 py-2 text-white"
+                                                    className="rounded bg-[#B5651D] px-4 py-2 text-white hover:bg-[#8A4A12]"
                                                 >
                                                     Save
                                                 </button>

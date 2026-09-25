@@ -15,21 +15,21 @@ function Navbar({ currentUser, onLogout }) {
     return (
         <>
             {redirectMessage && (
-                <div className="bg-yellow-50 border-b border-yellow-200 px-8 py-2 text-sm text-yellow-800 text-center">
+                <div className="bg-amber-50 border-b border-amber-200 px-8 py-2 text-sm text-amber-900 text-center">
                     {redirectMessage}
                 </div>
             )}
 
-            <nav className="bg-white border-b px-8 py-4 flex items-center justify-between">
-                <span className="text-xl font-bold text-gray-900">SupportDesk</span>
+            <nav className="bg-[#FBF9F4] border-b border-[#E7E2D6] px-8 py-4 flex items-center justify-between">
+                <span className="text-xl font-serif tracking-tight text-[#211C16]">SupportDesk</span>
 
                 <div className="flex items-center gap-6">
                     <NavLink
                         to="/dashboard"
                         className={({ isActive }) =>
                             isActive
-                                ? 'text-sm font-medium text-blue-600'
-                                : 'text-sm text-gray-600 hover:text-gray-900'
+                                ? 'text-sm font-medium text-[#211C16] border-b-2 border-[#B5651D] pb-1'
+                                : 'text-sm text-gray-500 hover:text-[#211C16] pb-1 border-b-2 border-transparent'
                         }
                     >
                         Dashboard
@@ -39,8 +39,8 @@ function Navbar({ currentUser, onLogout }) {
                         to="/tickets"
                         className={({ isActive }) =>
                             isActive
-                                ? 'text-sm font-medium text-blue-600'
-                                : 'text-sm text-gray-600 hover:text-gray-900'
+                                ? 'text-sm font-medium text-[#211C16] border-b-2 border-[#B5651D] pb-1'
+                                : 'text-sm text-gray-500 hover:text-[#211C16] pb-1 border-b-2 border-transparent'
                         }
                     >
                         Tickets
@@ -50,14 +50,14 @@ function Navbar({ currentUser, onLogout }) {
                         to="/customers"
                         className={({ isActive }) =>
                             isActive
-                                ? 'text-sm font-medium text-blue-600'
-                                : 'text-sm text-gray-600 hover:text-gray-900'
+                                ? 'text-sm font-medium text-[#211C16] border-b-2 border-[#B5651D] pb-1'
+                                : 'text-sm text-gray-500 hover:text-[#211C16] pb-1 border-b-2 border-transparent'
                         }
                     >
                         Customers
                     </NavLink>
 
-                    <div className="flex items-center gap-3 border-l pl-6">
+                    <div className="flex items-center gap-3 border-l border-[#E7E2D6] pl-6">
                         {currentUser && (
                             <span className="text-sm text-gray-500">
                                 {currentUser.name}
@@ -67,7 +67,7 @@ function Navbar({ currentUser, onLogout }) {
                         <button
                             type="button"
                             onClick={handleLogout}
-                            className="text-sm text-gray-600 hover:text-gray-900"
+                            className="text-sm text-gray-500 hover:text-[#211C16]"
                         >
                             Log Out
                         </button>

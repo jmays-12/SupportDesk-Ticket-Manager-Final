@@ -12,9 +12,9 @@ function Dashboard({ currentUser, onLogout }) {
     const [loading, setLoading] = useState(true)
 
     const statusStyles = {
-        open: 'bg-blue-50 text-blue-700 border-blue-200',
-        in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-        resolved: 'bg-green-50 text-green-700 border-green-200',
+        open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
+        in_progress: 'bg-amber-50 text-amber-700 border-amber-200',
+        resolved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     }
 
     const statusLabels = {
@@ -56,58 +56,58 @@ function Dashboard({ currentUser, onLogout }) {
     ).length
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-[#F6F4EE]">
             <Navbar currentUser={currentUser} onLogout={onLogout} />
 
             <div className="mx-auto max-w-6xl px-4 pt-8">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-serif text-[#211C16]">
                         Welcome, {currentUser?.name || 'User'}
                     </h1>
                 </div>
 
                 {/* stats */}
                 <div className="mt-8 grid gap-6 sm:grid-cols-3">
-                    <div className="rounded-lg bg-white p-6 shadow">
+                    <div className="rounded-lg bg-white p-6 shadow-sm border-t-2 border-[#B5651D]">
                         <p className="text-med text-center font-medium text-gray-900">
                             Open Tickets
                         </p>
 
-                        <p className="mt-2 text-3xl text-center font-bold text-gray-500">
+                        <p className="mt-2 text-3xl text-center font-serif text-[#211C16]">
                             {loading ? '-' : openTickets}
                         </p>
                     </div>
 
-                    <div className="rounded-lg bg-white p-6 shadow">
+                    <div className="rounded-lg bg-white p-6 shadow-sm border-t-2 border-red-400">
                         <p className="text-med text-center font-medium text-gray-900">
                             Critical Priority
                         </p>
 
-                        <p className="mt-2 text-3xl text-center font-bold text-red-600">
+                        <p className="mt-2 text-3xl text-center font-serif text-red-600">
                             {loading ? '-' : criticalPriorityTickets}
                         </p>
                     </div>
 
-                    <div className="rounded-lg bg-white p-6 shadow">
+                    <div className="rounded-lg bg-white p-6 shadow-sm border-t-2 border-emerald-400">
                         <p className="text-med text-center font-medium text-gray-900">
                             Resolved Tickets
                         </p>
 
-                        <p className="mt-2 text-3xl text-center font-bold text-green-400">
+                        <p className="mt-2 text-3xl text-center font-serif text-emerald-600">
                             {loading ? '-' : resolvedTickets}
                         </p>
                     </div>
                 </div>
                 {/* recent tickets */}
-                <div className="mt-8 rounded-lg bg-white p-6 shadow">
+                <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold text-gray-900">
+                        <h2 className="text-xl font-serif text-[#211C16]">
                             Recent Tickets
                         </h2>
 
                         <Link
                             to="/tickets"
-                            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                            className="text-sm font-medium text-[#B5651D] hover:text-[#8A4A12]"
                         >
                             View all
                         </Link>

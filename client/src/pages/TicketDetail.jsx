@@ -5,7 +5,7 @@ import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
 
 const statusStyles = {
-    open: 'bg-blue-50 text-blue-700 border-blue-200',
+    open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
     in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     resolved: 'bg-green-50 text-green-700 border-green-200',
 }
@@ -179,7 +179,7 @@ function TicketDetail({ currentUser, onLogout }) {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100">
+            <div className="min-h-screen bg-[#F6F4EE]">
                 <Navbar currentUser={currentUser} onLogout={onLogout} />
                 <div className="mx-auto max-w-4xl px-4 pt-8">
                     <p className="text-gray-500">Loading...</p>
@@ -190,7 +190,7 @@ function TicketDetail({ currentUser, onLogout }) {
 
     if (error || !ticket) {
         return (
-            <div className="min-h-screen bg-gray-100">
+            <div className="min-h-screen bg-[#F6F4EE]">
                 <Navbar currentUser={currentUser} onLogout={onLogout} />
                 <div className="mx-auto max-w-4xl px-4 pt-8">
                     <p className="text-red-600">{error || 'Ticket not found.'}</p>
@@ -200,14 +200,14 @@ function TicketDetail({ currentUser, onLogout }) {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-[#F6F4EE]">
             <Navbar currentUser={currentUser} onLogout={onLogout} />
 
             <div className="mx-auto max-w-4xl px-4 pt-8">
                 {/* back button */}
                 <button
                     onClick={() => navigate('/tickets')}
-                    className="mb-6 text-sm text-blue-600 hover:text-blue-700"
+                    className="mb-6 text-sm text-[#B5651D] hover:text-[#8A4A12]"
                 >
                     ← Back to Tickets
                 </button>
@@ -219,10 +219,10 @@ function TicketDetail({ currentUser, onLogout }) {
                 )}
 
                 {/* main ticket card */}
-                <div className="rounded-lg bg-white p-6 shadow">
+                <div className="rounded-lg bg-white p-6 shadow-sm">
                     <div className="mb-6 flex items-start justify-between">
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
+                            <h1 className="text-2xl font-serif text-[#211C16]">
                                 {ticket.subject}
                             </h1>
                             <p className="mt-1 text-sm text-gray-500">
@@ -234,7 +234,7 @@ function TicketDetail({ currentUser, onLogout }) {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    className="rounded border border-gray-300 px-3 py-2 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                 >
                                     Edit
                                 </button>
@@ -344,14 +344,14 @@ function TicketDetail({ currentUser, onLogout }) {
                             )}
                             <button
                                 onClick={handleSaveTicket}
-                                className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                                className="rounded bg-[#B5651D] px-4 py-2 text-white hover:bg-[#8A4A12]"
                             >
                                 Save Changes
                             </button>
 
                             <button
                                 onClick={() => setIsEditing(false)}
-                                className="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                className="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-[#F6F4EE]"
                             >
                                 Cancel
                             </button>
@@ -360,8 +360,8 @@ function TicketDetail({ currentUser, onLogout }) {
                 </div>
 
                 {/* notes section */}
-                <div className="mt-8 rounded-lg bg-white p-6 shadow">
-                    <h2 className="mb-4 text-xl font-semibold text-gray-900">Notes</h2>
+                <div className="mt-8 rounded-lg bg-white p-6 shadow-sm">
+                    <h2 className="mb-4 text-xl font-serif text-[#211C16]">Notes</h2>
 
                     {/* existing notes */}
                     {ticket.notes && ticket.notes.length > 0 ? (
@@ -380,14 +380,14 @@ function TicketDetail({ currentUser, onLogout }) {
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => handleSaveNote(note.id)}
-                                                    className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                                    className="rounded bg-[#B5651D] px-3 py-1 text-sm text-white hover:bg-[#8A4A12]"
                                                 >
                                                     Save
                                                 </button>
 
                                                 <button
                                                     onClick={() => setEditingNoteId(null)}
-                                                    className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                                                    className="rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 hover:bg-[#F6F4EE]"
                                                 >
                                                     Cancel
                                                 </button>
@@ -445,7 +445,7 @@ function TicketDetail({ currentUser, onLogout }) {
 
                         <button
                             onClick={handleCreateNote}
-                            className="mt-3 rounded bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
+                            className="mt-3 rounded bg-[#B5651D] px-4 py-2 text-sm text-white hover:bg-[#8A4A12]"
                         >
                             Add Note
                         </button>
