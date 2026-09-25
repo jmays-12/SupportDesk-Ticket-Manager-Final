@@ -934,7 +934,7 @@ function Tickets({ currentUser, onLogout }) {
                                         <option value={50}>50</option>
                                     </select>
 
-                                    <span>per page &middot; {totalTickets} unresolved ticket{totalTickets === 1 ? '' : 's'} total</span>
+                                    <span>per page &middot; {totalTickets} ticket{totalTickets === 1 ? '' : 's'} total</span>
                                 </div>
 
                                 <div className="flex items-center gap-2">
