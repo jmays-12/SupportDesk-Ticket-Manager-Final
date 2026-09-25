@@ -3,24 +3,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 
 import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
-
-const statusStyles = {
-    open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
-    in_progress: 'bg-[#F5F0E6] text-[#8A6A32] border-[#DCCBA5]',
-    resolved: 'bg-[#EEF3EE] text-[#3F5D42] border-[#B8C9BA]',
-}
+import { priorityStyles, statusStyles } from './Tickets.jsx'
 
 const statusLabels = {
     open: 'Open',
     in_progress: 'In Progress',
     resolved: 'Resolved',
-}
-
-const priorityStyles = {
-    low: 'bg-gray-50 text-gray-600 border-gray-200',
-    medium: 'bg-orange-50 text-orange-700 border-orange-200',
-    high: 'bg-red-50 text-red-700 border-red-200',
-    critical: 'bg-red-100 text-red-900 border-red-400',
 }
 
 function TicketDetail({ currentUser, onLogout }) {
