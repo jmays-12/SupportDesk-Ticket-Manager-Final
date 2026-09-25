@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, useLocation, redirect } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 import { apiFetch } from '../api.js'
 

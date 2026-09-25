@@ -14,11 +14,7 @@ function Navbar({ currentUser, onLogout }) {
 
     return (
         <>
-            {redirectMessage && (
-                <div className="bg-amber-50 border-b border-amber-200 px-8 py-2 text-sm text-amber-900 text-center">
-                    {redirectMessage}
-                </div>
-            )}
+
 
             <nav className="bg-[#FBF9F4] border-b border-[#E7E2D6] px-8 py-4 flex items-center justify-between">
                 <span className="text-xl font-serif tracking-tight text-[#211C16]">SupportDesk</span>

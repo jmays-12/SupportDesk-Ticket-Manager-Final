@@ -35,12 +35,8 @@ function App() {
             if (storedUser && token) {
                 // Verify the token is still valid by making a test API call
                 try {
-                    const response = await fetch('/api/users', {
+                    const response = await apiFetch('/api/users', {
                         method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
                     })
 
                     if (response.ok) {

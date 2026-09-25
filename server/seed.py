@@ -492,7 +492,7 @@ def seed_database():
         print(f"Created {len(notes)} ticket notes.")
         print()
         print("Coverage:")
-        print("  - 32 tickets: 4 priorities x 3 statuses, assigned & unassigned")
+        print(f"  - {len(tickets)} tickets: 4 priorities x 3 statuses, assigned & unassigned")
         print("  - 1 ticket with a very long description")
         print("  - 1 ticket with a very long subject")
         print("  - 1 ticket with a single-word description")
