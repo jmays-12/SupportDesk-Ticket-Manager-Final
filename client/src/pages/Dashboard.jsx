@@ -4,18 +4,13 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar.jsx'
 import { apiFetch } from '../api.js'
 import { formatDate } from '../utils/dateUtils.js'
+import { statusStyles } from './Tickets.jsx'
 
 function Dashboard({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Dashboard'
 
     const [tickets, setTickets] = useState([])
     const [loading, setLoading] = useState(true)
-
-    const statusStyles = {
-        open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
-        in_progress: 'bg-amber-50 text-amber-700 border-amber-200',
-        resolved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    }
 
     const statusLabels = {
         open: 'Open',

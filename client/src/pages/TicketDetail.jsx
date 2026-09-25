@@ -6,8 +6,8 @@ import { apiFetch } from '../api.js'
 
 const statusStyles = {
     open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
-    in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    resolved: 'bg-green-50 text-green-700 border-green-200',
+    in_progress: 'bg-[#F5F0E6] text-[#8A6A32] border-[#DCCBA5]',
+    resolved: 'bg-[#EEF3EE] text-[#3F5D42] border-[#B8C9BA]',
 }
 
 const statusLabels = {
@@ -176,6 +176,7 @@ function TicketDetail({ currentUser, onLogout }) {
             setError('Failed to delete ticket.')
         }
     }
+
 
     if (loading) {
         return (

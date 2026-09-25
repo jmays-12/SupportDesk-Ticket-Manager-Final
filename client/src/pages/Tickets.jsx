@@ -8,17 +8,17 @@ import { apiFetch } from '../api.js'
 
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
-const statusStyles = {
+export const statusStyles = {
     open: 'bg-[#FBF9F4] text-[#8A4A12] border-[#E7C9A0]',
     in_progress: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    resolved: 'bg-green-50 text-green-700 border-green-200',
+    resolved: 'bg-[#E8EEE5] text-[#3E573A] border-[#9BAF96]',
 }
 
 const priorityStyles = {
-    low: 'bg-gray-50 text-gray-600 border-gray-200',
-    medium: 'bg-orange-50 text-orange-700 border-orange-200',
+    low: 'bg-amber-50 text-amber-600 border-amber-200',
+    medium: 'bg-orange-50 text-orange-800 border-orange-200',
     high: 'bg-red-50 text-red-700 border-red-200',
-    critical: 'bg-red-100 text-red-900 border-red-400',
+    critical: 'bg-red-100 text-red-900 border-red-600',
 }
 
 function Tickets({ currentUser, onLogout }) {
@@ -763,7 +763,7 @@ function Tickets({ currentUser, onLogout }) {
                                                         <button
                                                             type="button"
                                                             onClick={() => handleMarkResolved(ticket.id)}
-                                                            className="rounded border border-green-300 bg-green-50 px-3 py-1 text-sm text-green-700 hover:bg-green-100"
+                                                            className="rounded border border-[#9BAF96] bg-[#E8EEE5] px-3 py-1 text-sm text-[#3E573A] hover:bg-[#D9E3D5]"
                                                         >
                                                             Mark Resolved
                                                         </button>
