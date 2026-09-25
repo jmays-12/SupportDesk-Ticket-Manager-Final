@@ -149,6 +149,78 @@ def seed_database():
                 customer_id=customer3.id,
                 assigned_user_id=None
             ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Customer says website has too many empty tickets for testing purposes",
+                status="open",
+                priority="low",
+                customer_id=customer3.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer2.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer2.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer2.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer2.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer3.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="low",
+                customer_id=customer1.id,
+                assigned_user_id=None
+            ),
+
+            Ticket(
+                subject="A Support Ticket",
+                description="Test ticket to show pagination",
+                status="open",
+                priority="medium",
+                customer_id=customer1.id,
+                assigned_user_id=None
+            ),
         ]
 
         db.session.add_all(tickets)

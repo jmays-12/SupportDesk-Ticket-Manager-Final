@@ -207,24 +207,64 @@ def delete_customer(id):
 @app.route("/api/tickets", methods=["GET"])
 @jwt_required()
 def get_tickets():
-    tickets = Ticket.query.order_by(Ticket.id).all()
+    # pagination params
+    page = request.args.get("page", 1, type=int)
+    limit = request.args.get("limit", 10, type=int)
+    limit = min(limit, 100)  # guard against someone requesting an enormous page
 
-    return jsonify([
-        {
-            "id": ticket.id,
-            "subject": ticket.subject,
-            "description": ticket.description,
-            "status": ticket.status,
-            "priority": ticket.priority,
-            "customer_id": ticket.customer_id,
-            "customer_name": ticket.customer.name,
-            "assigned_user_id": ticket.assigned_user_id,
-            "assigned_user_name": ticket.assigned_user.name if ticket.assigned_user else None,
-            "created_at": ticket.created_at.isoformat()
-        }
-        for ticket in tickets
-    ]), 200
+    # filter params
+    status = request.args.get("status")  # 'open' | 'in_progress' | 'resolved' | None (=all)
+    show_resolved = request.args.get("show_resolved", "false").lower() == "true"
 
+    # sort params
+    sort_by = request.args.get("sort_by", "dateold")
+
+    query = Ticket.query
+
+    if status:
+        query = query.filter(Ticket.status == status)
+    elif not show_resolved:
+        query = query.filter(Ticket.status != "resolved")
+
+    if sort_by == "datenew":
+        query = query.order_by(Ticket.created_at.desc())
+    elif sort_by == "priority":
+        priority_order = db.case(
+            (Ticket.priority == "critical", 4),
+            (Ticket.priority == "high", 3),
+            (Ticket.priority == "medium", 2),
+            (Ticket.priority == "low", 1),
+            else_=0
+        )
+        query = query.order_by(priority_order.desc())
+    elif sort_by == "status":
+        query = query.order_by(Ticket.status.asc())
+    else:  # 'dateold' default
+        query = query.order_by(Ticket.created_at.asc())
+
+    pagination = query.paginate(page=page, per_page=limit, error_out=False)
+
+    return jsonify({
+        "tickets": [
+            {
+                "id": ticket.id,
+                "subject": ticket.subject,
+                "description": ticket.description,
+                "status": ticket.status,
+                "priority": ticket.priority,
+                "customer_id": ticket.customer_id,
+                "customer_name": ticket.customer.name,
+                "assigned_user_id": ticket.assigned_user_id,
+                "assigned_user_name": ticket.assigned_user.name if ticket.assigned_user else None,
+                "created_at": ticket.created_at.isoformat()
+            }
+            for ticket in pagination.items
+        ],
+        "page": pagination.page,
+        "limit": limit,
+        "total": pagination.total,
+        "total_pages": pagination.pages
+    }), 200
 
 @app.route("/api/tickets/<int:id>", methods=["GET"])
 @jwt_required()
