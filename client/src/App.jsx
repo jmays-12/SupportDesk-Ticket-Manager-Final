@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+
 import Dashboard from './pages/Dashboard'
 import Tickets from './pages/Tickets'
 import TicketDetail from './pages/TicketDetail'
 import Customers from './pages/Customers'
 import Auth from './pages/Auth'
+import { apiFetch } from './api'
+
 
 // redirect if user is not logged in
 function ProtectedRoute({ currentUser, loading, children }) {

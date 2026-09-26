@@ -5,18 +5,20 @@ import Navbar from '../components/Navbar'
 import { apiFetch } from '../api.js'
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
+
 export const statusStyles = {
-    open: 'bg-[#FBF3E4] text-[#8A4A12] border-[#E7C9A0]',
-    in_progress: 'bg-[#F3EDDD] text-[#7A6330] border-[#D9C79A]',
-    resolved: 'bg-[#E8EEE5] text-[#3E573A] border-[#9BAF96]',
+    open: 'bg-[#FFF7EA] text-[#8A4A12] border-[#EACFA8]',
+    in_progress: 'bg-[#F8F2E3] text-[#78602D] border-[#DED0A9]',
+    resolved: 'bg-[#EDF3EA] text-[#405A3C] border-[#A9BAA4]',
 }
 
 export const priorityStyles = {
-    low: 'bg-[#F3EFE6] text-[#6B6259] border-[#DAD2C2]',
-    medium: 'bg-[#F6EEDC] text-[#8A6A32] border-[#E0CB9C]',
-    high: 'bg-[#F5E1D6] text-[#9B4A24] border-[#DBA98A]',
-    critical: 'bg-[#EED9D2] text-[#7A2E1A] border-red-600',
+    low: 'bg-[#F7F3EB] text-[#6B6259] border-[#DED7C9]',
+    medium: 'bg-[#FAF2DF] text-[#896A32] border-[#E4D0A2]',
+    high: 'bg-[#F9E8DE] text-[#984B28] border-[#E0B19A]',
+    critical: 'bg-[#F3E0DA] text-[#7A2E1A] border-[#C98570]',
 }
+
 
 function Tickets({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Tickets'
