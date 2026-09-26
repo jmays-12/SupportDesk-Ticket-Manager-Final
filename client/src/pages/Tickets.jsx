@@ -5,20 +5,18 @@ import Navbar from '../components/Navbar'
 import { apiFetch } from '../api.js'
 import { formatRelativeTime } from '../utils/dateUtils.js'
 
-
 export const statusStyles = {
-    open: 'bg-[#FFF7EA] text-[#8A4A12] border-[#EACFA8]',
-    in_progress: 'bg-[#F8F2E3] text-[#78602D] border-[#DED0A9]',
-    resolved: 'bg-[#EDF3EA] text-[#405A3C] border-[#A9BAA4]',
+    open: 'bg-[#FBF3E4] text-[#8A4A12] border-[#E7C9A0]',
+    in_progress: 'bg-[#EAF1F6] text-[#2E5A78] border-[#B9D3E0]',
+    resolved: 'bg-[#E8EEE5] text-[#3E573A] border-[#9BAF96]',
 }
 
 export const priorityStyles = {
-    low: 'bg-[#F7F3EB] text-[#6B6259] border-[#DED7C9]',
-    medium: 'bg-[#FAF2DF] text-[#896A32] border-[#E4D0A2]',
-    high: 'bg-[#F9E8DE] text-[#984B28] border-[#E0B19A]',
-    critical: 'bg-[#F3E0DA] text-[#7A2E1A] border-[#C98570]',
+    low: 'bg-[#F1EFEA] text-[#6B6259] border-[#DAD2C2]',
+    medium: 'bg-[#F6EEDC] text-[#8A6A32] border-[#E0CB9C]',
+    high: 'bg-[#F5E1D6] text-[#B5651D] border-[#DBA98A]',
+    critical: 'bg-[#FBDCD6] text-[#B3261E] border-[#E8A79C]',
 }
-
 
 function Tickets({ currentUser, onLogout }) {
     document.title = 'SupportDesk - Tickets'
@@ -514,7 +512,7 @@ function Tickets({ currentUser, onLogout }) {
                                 setFilterStatus('all')
                                 setPage(1)
                             }}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'all' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm transition-colors ${filterStatus === 'all' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                         >
                             All
                         </button>
@@ -525,7 +523,7 @@ function Tickets({ currentUser, onLogout }) {
                                 setFilterStatus('open')
                                 setPage(1)
                             }}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'open' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm transition-colors ${filterStatus === 'open' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                         >
                             Open
                         </button>
@@ -536,7 +534,7 @@ function Tickets({ currentUser, onLogout }) {
                                 setFilterStatus('in_progress')
                                 setPage(1)
                             }}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'in_progress' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm transition-colors ${filterStatus === 'in_progress' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                         >
                             In Progress
                         </button>
@@ -547,13 +545,13 @@ function Tickets({ currentUser, onLogout }) {
                                 setFilterStatus('resolved')
                                 setPage(1)
                             }}
-                            className={`rounded px-3 py-1 text-sm ${filterStatus === 'resolved' ? 'bg-[#B5651D] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            className={`rounded px-3 py-1 text-sm transition-colors ${filterStatus === 'resolved' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                         >
                             Resolved
                         </button>
 
                         {/* show resolved tickets toggle checkbox */}
-                        <label className="rounded px-3 py-1 bg-gray-100 hover:bg-gray-200 ml-auto flex items-center gap-2 text-sm text-gray-700">
+                        <label className="rounded px-3 py-1 bg-[#F1EDE2] hover:bg-[#E7E2D6] ml-auto flex items-center gap-2 text-sm text-[#6B6259]">
                             Show resolved tickets:
 
                             <input
@@ -573,7 +571,7 @@ function Tickets({ currentUser, onLogout }) {
                             <button
                                 type="button"
                                 onClick={() => setSortBy('dateold')}
-                                className={`rounded px-3 py-1 text-sm ${sortBy === 'dateold' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                className={`rounded px-3 py-1 text-sm transition-colors ${sortBy === 'dateold' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                             >
                                 Date (Oldest first)
                             </button>
@@ -581,7 +579,7 @@ function Tickets({ currentUser, onLogout }) {
                             <button
                                 type="button"
                                 onClick={() => setSortBy('datenew')}
-                                className={`rounded px-3 py-1 text-sm ${sortBy === 'datenew' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                className={`rounded px-3 py-1 text-sm transition-colors ${sortBy === 'datenew' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                             >
                                 Date (Newest first)
                             </button>
@@ -589,7 +587,7 @@ function Tickets({ currentUser, onLogout }) {
                             <button
                                 type="button"
                                 onClick={() => setSortBy('priority')}
-                                className={`rounded px-3 py-1 text-sm ${sortBy === 'priority' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                className={`rounded px-3 py-1 text-sm transition-colors ${sortBy === 'priority' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                             >
                                 Priority
                             </button>
@@ -597,7 +595,7 @@ function Tickets({ currentUser, onLogout }) {
                             <button
                                 type="button"
                                 onClick={() => setSortBy('status')}
-                                className={`rounded px-3 py-1 text-sm ${sortBy === 'status' ? 'bg-gray-700 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                                className={`rounded px-3 py-1 text-sm transition-colors ${sortBy === 'status' ? 'bg-[#B5651D] text-white' : 'bg-[#F1EDE2] text-[#6B6259] hover:bg-[#E7E2D6]'}`}
                             >
                                 Status
                             </button>
