@@ -1,5 +1,11 @@
+import random
+from datetime import datetime, timedelta, timezone
+
 from app import app, db, bcrypt
 from models import User, Customer, Ticket, TicketNote
+
+# Uncomment for reproducible seed data (same "random" dates every run):
+# random.seed(111)
 
 
 LOREM_SHORT = (
@@ -49,6 +55,53 @@ LOREM_XLONG = LOREM_LONG + " " + (
 )
 
 
+def random_ticket_date(status):
+    """
+    Pick a realistic created_at for a ticket based on its status:
+    resolved tickets skew older (they've had time to get resolved),
+    in-progress tickets are moderately recent, and open tickets skew
+    toward the last couple of weeks. Without this, every ticket in the
+    seed data would get the exact same "now" timestamp.
+    """
+    now = datetime.now(timezone.utc)
+
+    if status == "resolved":
+        days_ago = random.uniform(14, 120)
+    elif status == "in_progress":
+        days_ago = random.uniform(3, 30)
+    else:  # open
+        days_ago = random.uniform(0, 14)
+
+    return now - timedelta(
+        days=days_ago,
+        hours=random.uniform(0, 23),
+        minutes=random.uniform(0, 59),
+    )
+
+
+def random_note_dates(start_dt, count, max_gap_days=5):
+    """
+    Generate `count` created_at timestamps for notes on the same ticket.
+    Each one lands after the previous timestamp (and after the ticket's
+    own created_at), and never past "now" - so notes always look like
+    they happened after the ticket was opened, in order.
+    """
+    now = datetime.now(timezone.utc)
+    dates = []
+    cursor = start_dt
+
+    for _ in range(count):
+        upper_bound = min(now, cursor + timedelta(days=max_gap_days))
+        if upper_bound <= cursor:
+            cursor = now
+        else:
+            gap_seconds = random.uniform(3600, (upper_bound - cursor).total_seconds())
+            cursor = cursor + timedelta(seconds=gap_seconds)
+        dates.append(cursor)
+
+    return dates
+
+
 def seed_database():
     with app.app_context():
         print("Clearing existing data...")
@@ -84,12 +137,12 @@ def seed_database():
         print("Creating customers...")
 
         customers = [
-            Customer(name="Placeholder Customer 1", email="customer1@example.com", phone_number="555-010-0001"),
-            Customer(name="Placeholder Customer 2", email="customer2@example.com", phone_number="555-010-0002"),
-            Customer(name="Placeholder Customer 3", email="customer3@example.com", phone_number="555-010-0003"),
-            Customer(name="Placeholder Customer 4", email="customer4@example.com", phone_number=None),
-            Customer(name="Placeholder Customer 5", email="customer5@example.com", phone_number="555-010-0005"),
-            Customer(name="Placeholder Customer 6", email="customer6@example.com", phone_number=None),
+            Customer(name="Bob Smith", email="customer1@example.com", phone_number="555-010-0001"),
+            Customer(name="Alice Bennett", email="customer2@example.com", phone_number="555-010-0002"),
+            Customer(name="Riley Parker", email="customer3@example.com", phone_number="555-010-0003"),
+            Customer(name="Jamie Collins", email="customer4@example.com", phone_number=None),
+            Customer(name="Reginald Lee", email="customer5@example.com", phone_number="555-010-0005"),
+            Customer(name="Phil Debe", email="customer6@example.com", phone_number=None),
         ]
 
         db.session.add_all(customers)
@@ -105,6 +158,7 @@ def seed_database():
                 description=LOREM_LONG,
                 status="open",
                 priority="critical",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=admin.id,
             ),
@@ -113,6 +167,7 @@ def seed_database():
                 description=LOREM_LONG,
                 status="in_progress",
                 priority="critical",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[1].id,
                 assigned_user_id=test_user.id,
             ),
@@ -121,6 +176,7 @@ def seed_database():
                 description=LOREM_MEDIUM,
                 status="resolved",
                 priority="critical",
+                created_at=random_ticket_date("resolved"),
                 customer_id=customers[2].id,
                 assigned_user_id=admin.id,
             ),
@@ -129,6 +185,7 @@ def seed_database():
                 description=LOREM_MEDIUM,
                 status="open",
                 priority="high",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[3].id,
                 assigned_user_id=None,
             ),
@@ -137,6 +194,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="in_progress",
                 priority="high",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[4].id,
                 assigned_user_id=None,
             ),
@@ -145,6 +203,7 @@ def seed_database():
                 description=LOREM_MEDIUM,
                 status="resolved",
                 priority="high",
+                created_at=random_ticket_date("resolved"),
                 customer_id=customers[5].id,
                 assigned_user_id=test_user.id,
             ),
@@ -153,6 +212,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=test_user.id,
             ),
@@ -161,6 +221,7 @@ def seed_database():
                 description=LOREM_MEDIUM,
                 status="in_progress",
                 priority="medium",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[1].id,
                 assigned_user_id=None,
             ),
@@ -169,6 +230,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="resolved",
                 priority="medium",
+                created_at=random_ticket_date("resolved"),
                 customer_id=customers[2].id,
                 assigned_user_id=None,
             ),
@@ -177,6 +239,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="low",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[3].id,
                 assigned_user_id=None,
             ),
@@ -185,6 +248,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="in_progress",
                 priority="low",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[4].id,
                 assigned_user_id=admin.id,
             ),
@@ -193,6 +257,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="resolved",
                 priority="low",
+                created_at=random_ticket_date("resolved"),
                 customer_id=customers[5].id,
                 assigned_user_id=test_user.id,
             ),
@@ -203,6 +268,7 @@ def seed_database():
                 description=LOREM_XLONG,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=None,
             ),
@@ -211,6 +277,7 @@ def seed_database():
                 description=LOREM_MEDIUM,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[1].id,
                 assigned_user_id=None,
             ),
@@ -219,6 +286,7 @@ def seed_database():
                 description="Placeholder.",
                 status="open",
                 priority="low",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[2].id,
                 assigned_user_id=None,
             ),
@@ -231,6 +299,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=None,
             ),
@@ -239,6 +308,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=None,
             ),
@@ -247,6 +317,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[1].id,
                 assigned_user_id=None,
             ),
@@ -255,6 +326,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="low",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[1].id,
                 assigned_user_id=None,
             ),
@@ -263,6 +335,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="low",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[2].id,
                 assigned_user_id=None,
             ),
@@ -271,6 +344,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[2].id,
                 assigned_user_id=None,
             ),
@@ -279,6 +353,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[3].id,
                 assigned_user_id=None,
             ),
@@ -287,6 +362,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[3].id,
                 assigned_user_id=None,
             ),
@@ -295,6 +371,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[4].id,
                 assigned_user_id=None,
             ),
@@ -303,6 +380,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="medium",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[4].id,
                 assigned_user_id=None,
             ),
@@ -317,6 +395,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="critical",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[5].id,
                 assigned_user_id=None,
             ),
@@ -325,6 +404,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="in_progress",
                 priority="low",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[5].id,
                 assigned_user_id=None,
             ),
@@ -337,6 +417,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="open",
                 priority="high",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[0].id,
                 assigned_user_id=admin.id,
             ),
@@ -345,6 +426,7 @@ def seed_database():
                 description=LOREM_SHORT,
                 status="in_progress",
                 priority="medium",
+                created_at=random_ticket_date("in_progress"),
                 customer_id=customers[0].id,
                 assigned_user_id=test_user.id,
             ),
@@ -355,6 +437,7 @@ def seed_database():
                 description="Placeholder description.",
                 status="open",
                 priority="low",
+                created_at=random_ticket_date("open"),
                 customer_id=customers[5].id,
                 assigned_user_id=None,
             ),
@@ -363,6 +446,7 @@ def seed_database():
                 description="Placeholder description.",
                 status="resolved",
                 priority="low",
+                created_at=random_ticket_date("resolved"),
                 customer_id=customers[4].id,
                 assigned_user_id=None,
             ),
@@ -370,7 +454,6 @@ def seed_database():
 
         db.session.add_all(tickets)
         db.session.commit()
-
 
         print("Creating ticket notes...")
 
@@ -401,74 +484,111 @@ def seed_database():
         #
         # (Two extra tickets beyond the plan for slack.)
 
+        # generate note timestamps per ticket, seeded from each ticket's own
+        # created_at, so notes always land chronologically after their ticket
+        t0_dates = random_note_dates(tickets[0].created_at, 4)
+        t1_dates = random_note_dates(tickets[1].created_at, 2)
+        t2_dates = random_note_dates(tickets[2].created_at, 1)
+        t4_dates = random_note_dates(tickets[4].created_at, 1)
+        t5_dates = random_note_dates(tickets[5].created_at, 2)
+        t7_dates = random_note_dates(tickets[7].created_at, 1)
+        t8_dates = random_note_dates(tickets[8].created_at, 1)
+        t10_dates = random_note_dates(tickets[10].created_at, 1)
+        t12_dates = random_note_dates(tickets[12].created_at, 2)
+        t13_dates = random_note_dates(tickets[13].created_at, 1)
+        t15_dates = random_note_dates(tickets[15].created_at, 1)
+        t20_dates = random_note_dates(tickets[20].created_at, 1)
+        t25_dates = random_note_dates(tickets[25].created_at, 1)
+        t27_dates = random_note_dates(tickets[27].created_at, 1)
+
         notes = [
             # Ticket 0: 4 notes, mixed authors, XL on the last
             TicketNote(ticket_id=tickets[0].id, user_id=admin.id,
-                       content="Placeholder note: initial triage complete."),
+                       content="Placeholder note: initial triage complete.",
+                       created_at=t0_dates[0]),
             TicketNote(ticket_id=tickets[0].id, user_id=test_user.id,
-                       content="Placeholder note: reproduced the issue locally."),
+                       content="Placeholder note: reproduced the issue locally.",
+                       created_at=t0_dates[1]),
             TicketNote(ticket_id=tickets[0].id, user_id=admin.id,
-                       content=LOREM_MEDIUM),
+                       content=LOREM_MEDIUM,
+                       created_at=t0_dates[2]),
             TicketNote(ticket_id=tickets[0].id, user_id=test_user.id,
-                       content=LOREM_XLONG),
+                       content=LOREM_XLONG,
+                       created_at=t0_dates[3]),
 
             # Ticket 1: 2 notes
             TicketNote(ticket_id=tickets[1].id, user_id=admin.id,
-                       content="Placeholder note: awaiting customer response."),
+                       content="Placeholder note: awaiting customer response.",
+                       created_at=t1_dates[0]),
             TicketNote(ticket_id=tickets[1].id, user_id=test_user.id,
-                       content=LOREM_MEDIUM),
+                       content=LOREM_MEDIUM,
+                       created_at=t1_dates[1]),
 
             # Ticket 2: 1 note
             TicketNote(ticket_id=tickets[2].id, user_id=admin.id,
-                       content="Placeholder note: marked resolved after verification."),
+                       content="Placeholder note: marked resolved after verification.",
+                       created_at=t2_dates[0]),
 
             # Ticket 4: 1 note
             TicketNote(ticket_id=tickets[4].id, user_id=test_user.id,
-                       content="Placeholder note: investigating."),
+                       content="Placeholder note: investigating.",
+                       created_at=t4_dates[0]),
 
             # Ticket 5: 2 notes
             TicketNote(ticket_id=tickets[5].id, user_id=test_user.id,
-                       content="Placeholder note: fix deployed to staging."),
+                       content="Placeholder note: fix deployed to staging.",
+                       created_at=t5_dates[0]),
             TicketNote(ticket_id=tickets[5].id, user_id=admin.id,
-                       content=LOREM_SHORT),
+                       content=LOREM_SHORT,
+                       created_at=t5_dates[1]),
 
             # Ticket 7: 1 note
             TicketNote(ticket_id=tickets[7].id, user_id=admin.id,
-                       content="Placeholder note: blocked on third-party vendor."),
+                       content="Placeholder note: blocked on third-party vendor.",
+                       created_at=t7_dates[0]),
 
             # Ticket 8: 1 note
             TicketNote(ticket_id=tickets[8].id, user_id=test_user.id,
-                       content="Placeholder note: customer confirmed resolution."),
+                       content="Placeholder note: customer confirmed resolution.",
+                       created_at=t8_dates[0]),
 
             # Ticket 10: 1 note
             TicketNote(ticket_id=tickets[10].id, user_id=admin.id,
-                       content="Placeholder note: low priority, scheduled for next sprint."),
+                       content="Placeholder note: low priority, scheduled for next sprint.",
+                       created_at=t10_dates[0]),
 
             # Ticket 12: 2 notes, one XL
             TicketNote(ticket_id=tickets[12].id, user_id=test_user.id,
-                       content=LOREM_XLONG),
+                       content=LOREM_XLONG,
+                       created_at=t12_dates[0]),
             TicketNote(ticket_id=tickets[12].id, user_id=admin.id,
-                       content="Placeholder note: see full description for context."),
+                       content="Placeholder note: see full description for context.",
+                       created_at=t12_dates[1]),
 
             # Ticket 13: 1 note
             TicketNote(ticket_id=tickets[13].id, user_id=admin.id,
-                       content="Placeholder note: subject length test."),
+                       content="Placeholder note: subject length test.",
+                       created_at=t13_dates[0]),
 
             # Ticket 15: 1 note (first pagination filler)
             TicketNote(ticket_id=tickets[15].id, user_id=admin.id,
-                       content="Placeholder note: pagination filler note."),
+                       content="Placeholder note: pagination filler note.",
+                       created_at=t15_dates[0]),
 
             # Ticket 20: 1 note (middle pagination filler)
             TicketNote(ticket_id=tickets[20].id, user_id=test_user.id,
-                       content="Placeholder note: pagination filler note."),
+                       content="Placeholder note: pagination filler note.",
+                       created_at=t20_dates[0]),
 
             # Ticket 25: 1 note (sort check critical)
             TicketNote(ticket_id=tickets[25].id, user_id=admin.id,
-                       content="Placeholder note: sort check."),
+                       content="Placeholder note: sort check.",
+                       created_at=t25_dates[0]),
 
             # Ticket 27: 1 note (customer 1 many tickets A)
             TicketNote(ticket_id=tickets[27].id, user_id=test_user.id,
-                       content="Placeholder note: multi-ticket customer."),
+                       content="Placeholder note: multi-ticket customer.",
+                       created_at=t27_dates[0]),
         ]
 
         db.session.add_all(notes)
@@ -501,6 +621,7 @@ def seed_database():
         print("  - Several multi-ticket customers")
         print("  - 2 tickets with no notes")
         print("  - 1 ticket with 4 notes (including a very long one)")
+        print("  - created_at dates randomized and status-weighted (resolved = older, open = recent)")
         print("====================================")
 
 
